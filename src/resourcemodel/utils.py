@@ -2,17 +2,14 @@
 Utility functions to create openapi spec from resource schema
 """
 import copy
-# [E0611(no-name-in-module), ]
-# [E0401(import-error), ]
-import distutils.dir_util  # pylint: disable=E0611,E0401
+import distutils.dir_util
 import json
 import logging
 import os
 import sys
 
-# pylint:W0611 Unused import jsonschema
 import yaml
-import jsonschema  # pylint: disable=W0611
+import jsonschema
 from jsonschema import Draft4Validator
 
 FAMILY_FILE = 'etc/family'
@@ -89,14 +86,14 @@ def dump_file_to_openapidir(basedir, openapidir, infile=None):
                     outfile.write(_str)
 
 
-# pylint: R1710(inconsistent-return-statements)
-def yaml_handler(path):  # pylint: disable=R1710
+def yaml_handler(path):
     """
     Loading yaml reference files
     """
     if path.startswith('file://'):
         with open(path[len('file://'):]) as f:
             return yaml.load(f)
+    return None
 
 
 def validate_schema(openapi_doc, filename):
@@ -229,7 +226,7 @@ def resolve_reference(resolver, propkey, propval, filename):
         if any(t in reference for t in stop_iterators):
             val = reference
             break
-        elif '$ref' in reference:
+        if '$ref' in reference:
             refname = reference['$ref']
             if _check_valid_ref_file(refname):
                 reference1 = resolver.resolve(reference['$ref'])

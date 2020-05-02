@@ -89,9 +89,7 @@ def main(args):
                                 args.module)
         else:
             _LOG.error('%s -- Resource does not exist', lone)
-            # W0603(global-statement
-            # pylint: disable=W0603
-            global _EXIT_STATUS
+            global _EXIT_STATUS  # pylint: disable=global-statement
             _EXIT_STATUS = 1
     sys.exit(_EXIT_STATUS)
 
@@ -128,9 +126,7 @@ def create_openapi_spec(openapi, schemafile, openapidir,
         'description': 'openapi spec for this resource'
     }
     specfile = os.path.join(openapidir, mimetype)
-    # W0603(global-statement
-    # pylint: disable=W0603
-    global _EXIT_STATUS
+    global _EXIT_STATUS  # pylint: disable=global-statement
     if major_version == 'v3':
         v3specobj = openapiv3.VersionV3(openapi,
                                         specfile,

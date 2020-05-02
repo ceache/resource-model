@@ -2,20 +2,20 @@
 create openapi spec from resource schema
 for Openapi 3.0 version
 """
-# pylint:C0302 Too many lines in module (1306/1000)
-# pylint: disable=C0302
 import copy
 import json
 import logging
 
 import yaml
-# pylint:W0611 Unused import jsonschema
-import jsonschema  # pylint: disable=W0611
 from jsonschema import RefResolver
 
 from . import utils
 _LOG = logging.getLogger(__name__)
 
+
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-lines
+# pylint: disable=too-many-branches
 
 class VersionV3():
     """
@@ -711,7 +711,6 @@ class VersionV3():
         #    'patch'] = copy.deepcopy(openapimutablehash)
 
     # R0915: Too many statements (51/50)
-    # pylint: disable=R0915
     def findallpaths_in_proplist(self,
                                  propname,
                                  propval,
@@ -1060,7 +1059,6 @@ class VersionV3():
         #    'patch'] = copy.deepcopy(openapiarray)
 
     # R0912: Too many branches (14/12)
-    # pylint: disable=R0912
     def findallpaths(self, propdict,
                      basepath, opid, tagname,
                      parameters, requirelist):
@@ -1356,7 +1354,6 @@ class VersionV3():
         Write openapi spec to output file v3
         """
         # W0603(global-statement
-        # pylint: disable=W0603
         if self.error:
             return
         if utils.validate_schema(self.openapi, self.schemafile):
