@@ -10,6 +10,7 @@ import unittest
 
 import resourcemodel
 
+
 class DummyTest(unittest.TestCase):
     """WE HAVE NO TESTS!!.
     """
@@ -20,5 +21,5 @@ class DummyTest(unittest.TestCase):
         assert resourcemodel.__file__
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
