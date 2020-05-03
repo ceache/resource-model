@@ -1,5 +1,3 @@
 mock
-pylint
 pytest
 pytest-cov
-blinker
