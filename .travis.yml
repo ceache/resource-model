@@ -15,11 +15,11 @@ matrix:
     env: TOXENV=docs
 
   - python: 3.8
-    env: TOXENV=py38-pytest
+    env: TOXENV=py38-pytest,codecov
   - python: 3.7
-    env: TOXENV=py37-pytest
+    env: TOXENV=py37-pytest,codecov
   - python: 3.6
-    env: TOXENV=py36-pytest
+    env: TOXENV=py36-pytest,codecov
 
   # Failures on these unsupported python versions are allowed
   # allow_failures:
@@ -27,7 +27,6 @@ matrix:
 
 
 install:
-- pip install -U setuptools wheel pip
 - pip install tox
 script:
 - tox -vvv
