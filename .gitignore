@@ -12,7 +12,7 @@ venv/
 !.keepme
 
 # Ignore generated files
-lib/python/*.egg-info/*
+*.egg-info
 
 # Ensure that .git* files are included
 !.gitignore

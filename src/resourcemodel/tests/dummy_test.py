@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-import resourcemodel  # pylint: disable=unused-import
+import resourcemodel
 
 
 class DummyTest(unittest.TestCase):
@@ -18,7 +18,8 @@ class DummyTest(unittest.TestCase):
     def test_dummy(self):
         """Test nothing.
         """
+        assert resourcemodel.__file__
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
