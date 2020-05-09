@@ -1,6 +1,6 @@
+"""Utility functions to create openapi spec from resource schema.
 """
-Utility functions to create openapi spec from resource schema
-"""
+
 import copy
 import distutils.dir_util
 import json
@@ -10,16 +10,13 @@ import sys
 
 import yaml
 import jsonschema
-from jsonschema import Draft4Validator
 
-FAMILY_FILE = "etc/family"
 _LOG = logging.getLogger(__name__)
 
 
 def add_rpcresponses():
-    """
-    Add generic responses to components/responses section
-    of openapi spec for rpc only
+    """Add generic responses to components/responses section
+    of openapi spec for rpc only.
     """
     resp_comp = dict()
     resp_comp["Accepted"] = {"description": "Accepted"}
@@ -39,27 +36,24 @@ def add_rpcresponses():
 
 
 def check_jsonschema(schemadoc, filename):
+    """Check schema against jsonschema Draft4
     """
-    Check schema against jsonschema Draft4
-    """
+
     error_flag = 0
     try:
-        Draft4Validator.check_schema(schemadoc)
+        jsonschema.Draft4Validator.check_schema(schemadoc)
     except jsonschema.exceptions.SchemaError as err:
         _LOG.error("Schema error in %s\n%s", filename, err)
         error_flag = 1
     return error_flag
 
 
-def dump_file_to_openapidir(basedir, openapidir, infile=None):
-    """
-    Copy common schema files to openapi directory
+def dump_file_to_openapidir(indir, openapidir):
+    """Copy common schema files to openapi directory
     """
     outfiledir = os.path.join(openapidir, "common")
-    if infile:
-        infildir = os.path.join(os.path.dirname(infile), "common")
-    else:
-        infiledir = os.path.join(basedir, "apischemas", "rschemas", "common")
+    infiledir = os.path.join(indir, "common")
+
     if os.path.isdir(infiledir):
         if not os.path.isdir(outfiledir):
             os.makedirs(outfiledir)
@@ -69,7 +63,7 @@ def dump_file_to_openapidir(basedir, openapidir, infile=None):
                 filename = os.path.join(root, name)
                 with open(filename) as inputfile:
                     try:
-                        value = yaml.load(inputfile)
+                        value = yaml.safe_load(inputfile)
                     except yaml.YAMLError as err:
                         sys.exit(
                             "Yaml Error in {0}: {1}".format(filename, err)
@@ -87,7 +81,7 @@ def yaml_handler(path):
     """
     if path.startswith("file://"):
         with open(path[len("file://") :]) as f:
-            return yaml.load(f)
+            return yaml.safe_load(f)
     return None
 
 
@@ -282,14 +276,12 @@ def check_basic_fields(resourcedef, filename):
             )
 
 
-def create_mime_type(resourcedef, family):
+def create_mime_type(resourcedef):
+    """Create mime-type in format `vnd.{meta}.v{version}`
+    e.g. "vnd.todo.v3.4.1"
     """
-    Create mime-type is of format
-    vnd.ms.{meta}_{proj}.{lone}.v{version}
-    vnd.ms.cookbook.todo.v3.4.1
-    """
-    mime_format = "vnd.ms.{0}.{1}.v{2}".format(
-        family, resourcedef["name"], resourcedef["version"]
+    mime_format = "vnd.{0}.v{1}".format(
+        resourcedef["name"], resourcedef["version"]
     )
     return mime_format
 
@@ -477,22 +469,3 @@ def delete_keys_from_dict(dict_del):
         if isinstance(val, dict):
             delete_keys_from_dict(val)
     return dict_del
-
-
-def get_family(basedir):
-    """
-    Get family name from the etc/family file in basedir
-    or from environment
-    """
-    family = None
-    familyfile = os.path.join(basedir, FAMILY_FILE)
-    try:
-        with open(familyfile) as fh:
-            family = fh.read().rstrip()
-    except FileNotFoundError as _:
-        pass
-    if "family" in os.environ:
-        family = os.environ["family"]
-    if family is None:
-        sys.exit("set family name and re-run the command")
-    return family
